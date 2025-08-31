@@ -21,15 +21,6 @@ bitflags! {
     }
 }
 
-const SCALE_PATTERN_MASK: u16 = 0b0000_1111_1111_1111;
-const SCALE_PATTERN_MINOR_MASK: u16 = 0b0000_0000_0000_0111;
-const SCALE_PATTERN_MINOR_WHOLE_HALF: u16 = 0b0110;
-const SCALE_PATTERN_MINOR_HALF_WHOLE: u16 = 0b0101;
-
-const SCALE_PATTERN_MAJOR_MASK: u16 = 0b0000_0000_0000_1111;
-const SCALE_PATTERN_MAJOR_WHOLE_WHOLE: u16 = 0b1010;
-const SCALE_PATTERN_MAJOR_HALF_WHOLE_AND_HALF: u16 = 0b1001;
-
 /// The major scale (Ionian mode).
 /// Pattern: W-W-H-W-W-W-H (Whole-Whole-Half-Whole-Whole-Whole-Half)
 pub const MAJOR_SCALE: ScalePattern = ScalePattern::MAJOR;
@@ -58,17 +49,27 @@ impl ScalePattern {
     /// Get the scale pattern.
     #[inline]
     pub const fn pattern(&self) -> u16 {
+        const SCALE_PATTERN_MASK: u16 = 0b0000_1111_1111_1111;
+
         self.bits() & SCALE_PATTERN_MASK
     }
 
     #[inline]
     pub const fn is_major(&self) -> bool {
+        const SCALE_PATTERN_MAJOR_MASK: u16 = 0b0000_0000_0000_1111;
+        const SCALE_PATTERN_MAJOR_WHOLE_WHOLE: u16 = 0b1010;
+        const SCALE_PATTERN_MAJOR_HALF_WHOLE_AND_HALF: u16 = 0b1001;
+
         let bits = self.bits() & SCALE_PATTERN_MAJOR_MASK;
         bits == SCALE_PATTERN_MAJOR_WHOLE_WHOLE || bits == SCALE_PATTERN_MAJOR_HALF_WHOLE_AND_HALF
     }
 
     #[inline]
     pub const fn is_minor(&self) -> bool {
+        const SCALE_PATTERN_MINOR_MASK: u16 = 0b0000_0000_0000_0111;
+        const SCALE_PATTERN_MINOR_WHOLE_HALF: u16 = 0b0110;
+        const SCALE_PATTERN_MINOR_HALF_WHOLE: u16 = 0b0101;
+
         let bits = self.bits() & SCALE_PATTERN_MINOR_MASK;
         bits == SCALE_PATTERN_MINOR_WHOLE_HALF || bits == SCALE_PATTERN_MINOR_HALF_WHOLE
     }
