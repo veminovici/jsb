@@ -22,6 +22,8 @@ bitflags! {
 }
 
 const SCALE_PATTERN_MASK: u16 = 0b0000_1111_1111_1111;
+
+#[cfg(test)]
 const SCALE_PATTERN_MASKS: [u16; 12] = [
     0b0000_0000_0000_0001,
     0b0000_0000_0000_0010,
@@ -38,9 +40,20 @@ const SCALE_PATTERN_MASKS: [u16; 12] = [
 ];
 
 pub const MAJOR_SCALE: ScalePattern = ScalePattern::MAJOR;
+pub const MAJOR_SCALE_INTERVALS: [i8; 7] = [2, 4, 5, 7, 9, 11, 12];
+pub const MAJOR_SCALE_STEPS: [i8; 7] = [2, 2, 1, 2, 2, 2, 1];
+
 pub const NATURAL_MINOR_SCALE: ScalePattern = ScalePattern::NATURAL_MINOR;
+pub const NATURAL_MINOR_SCALE_INTERVALS: [i8; 7] = [2, 3, 5, 7, 8, 10, 12];
+pub const NATURAL_MINOR_SCALE_STEPS: [i8; 7] = [2, 1, 2, 2, 1, 2, 2];
+
 pub const HARMONIC_MINOR_SCALE: ScalePattern = ScalePattern::HARMONIC_MINOR;
+pub const HARMONIC_MINOR_SCALE_INTERVALS: [i8; 7] = [2, 3, 5, 7, 8, 11, 12];
+pub const HARMONIC_MINOR_SCALE_STEPS: [i8; 7] = [2, 1, 2, 2, 1, 3, 1];
+
 pub const MELODIC_MINOR_SCALE: ScalePattern = ScalePattern::MELODIC_MINOR;
+pub const MELODIC_MINOR_SCALE_INTERVALS: [i8; 7] = [2, 3, 5, 7, 9, 11, 12];
+pub const MELODIC_MINOR_SCALE_STEPS: [i8; 7] = [2, 1, 2, 2, 2, 2, 1];
 
 impl ScalePattern {
     /// Get the scale pattern.
@@ -48,9 +61,14 @@ impl ScalePattern {
     pub const fn pattern(&self) -> u16 {
         self.bits() & SCALE_PATTERN_MASK
     }
+}
 
-    pub fn intervals(&self) -> impl Iterator<Item = i8> {
-        let pattern = self.pattern();
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn get_intervals(pattern: &ScalePattern) -> impl Iterator<Item = i8> {
+        let pattern = pattern.pattern();
 
         SCALE_PATTERN_MASKS
             .iter()
@@ -64,65 +82,60 @@ impl ScalePattern {
             })
     }
 
-    pub fn steps(&self) -> impl Iterator<Item = i8> {
+    pub fn get_steps(pattern: &ScalePattern) -> impl Iterator<Item = i8> {
         let mut last = 0;
-        self.intervals().map(move |interval| {
+        get_intervals(pattern).map(move |interval| {
             let step = interval - last;
             last = interval;
             step
         })
     }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
 
     #[test]
     fn test_major_scale_intervals() {
-        let intervals = MAJOR_SCALE.intervals().collect::<Vec<_>>();
-        assert_eq!(intervals, vec![2, 4, 5, 7, 9, 11, 12]);
+        let intervals = get_intervals(&MAJOR_SCALE).collect::<Vec<_>>();
+        assert_eq!(intervals, MAJOR_SCALE_INTERVALS);
     }
 
     #[test]
     fn test_major_scale_steps() {
-        let steps = MAJOR_SCALE.steps().collect::<Vec<_>>();
-        assert_eq!(steps, vec![2, 2, 1, 2, 2, 2, 1]);
+        let steps = get_steps(&MAJOR_SCALE).collect::<Vec<_>>();
+        assert_eq!(steps, MAJOR_SCALE_STEPS);
     }
 
     #[test]
     fn test_minor_scale_intervals() {
-        let intervals = NATURAL_MINOR_SCALE.intervals().collect::<Vec<_>>();
-        assert_eq!(intervals, vec![2, 3, 5, 7, 8, 10, 12]);
+        let intervals = get_intervals(&NATURAL_MINOR_SCALE).collect::<Vec<_>>();
+        assert_eq!(intervals, NATURAL_MINOR_SCALE_INTERVALS);
     }
 
     #[test]
     fn test_minor_scale_steps() {
-        let steps = NATURAL_MINOR_SCALE.steps().collect::<Vec<_>>();
-        assert_eq!(steps, vec![2, 1, 2, 2, 1, 2, 2]);
+        let steps = get_steps(&NATURAL_MINOR_SCALE).collect::<Vec<_>>();
+        assert_eq!(steps, NATURAL_MINOR_SCALE_STEPS);
     }
 
     #[test]
     fn test_harmonic_scale_intervals() {
-        let intervals = HARMONIC_MINOR_SCALE.intervals().collect::<Vec<_>>();
-        assert_eq!(intervals, vec![2, 3, 5, 7, 8, 11, 12]);
+        let intervals = get_intervals(&HARMONIC_MINOR_SCALE).collect::<Vec<_>>();
+        assert_eq!(intervals, HARMONIC_MINOR_SCALE_INTERVALS);
     }
 
     #[test]
     fn test_harmonic_scale_steps() {
-        let steps = HARMONIC_MINOR_SCALE.steps().collect::<Vec<_>>();
-        assert_eq!(steps, vec![2, 1, 2, 2, 1, 3, 1]);
+        let steps = get_steps(&HARMONIC_MINOR_SCALE).collect::<Vec<_>>();
+        assert_eq!(steps, HARMONIC_MINOR_SCALE_STEPS);
     }
 
     #[test]
     fn test_melodic_scale_intervals() {
-        let intervals = MELODIC_MINOR_SCALE.intervals().collect::<Vec<_>>();
-        assert_eq!(intervals, vec![2, 3, 5, 7, 9, 11, 12]);
+        let intervals = get_intervals(&MELODIC_MINOR_SCALE).collect::<Vec<_>>();
+        assert_eq!(intervals, MELODIC_MINOR_SCALE_INTERVALS);
     }
 
     #[test]
     fn test_melodic_scale_steps() {
-        let steps = MELODIC_MINOR_SCALE.steps().collect::<Vec<_>>();
-        assert_eq!(steps, vec![2, 1, 2, 2, 2, 2, 1]);
+        let steps = get_steps(&MELODIC_MINOR_SCALE).collect::<Vec<_>>();
+        assert_eq!(steps, MELODIC_MINOR_SCALE_STEPS);
     }
 }
