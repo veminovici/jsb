@@ -26,6 +26,10 @@ const SCALE_PATTERN_MINOR_MASK: u16 = 0b0000_0000_0000_0111;
 const SCALE_PATTERN_MINOR_WHOLE_HALF: u16 = 0b0110;
 const SCALE_PATTERN_MINOR_HALF_WHOLE: u16 = 0b0101;
 
+const SCALE_PATTERN_MAJOR_MASK: u16 = 0b0000_0000_0000_1111;
+const SCALE_PATTERN_MAJOR_WHOLE_WHOLE: u16 = 0b1010;
+const SCALE_PATTERN_MAJOR_HALF_WHOLE_AND_HALF: u16 = 0b1001;
+
 pub const MAJOR_SCALE: ScalePattern = ScalePattern::MAJOR;
 pub const MAJOR_SCALE_INTERVALS: [i8; 7] = [2, 4, 5, 7, 9, 11, 12];
 pub const MAJOR_SCALE_STEPS: [i8; 7] = [2, 2, 1, 2, 2, 2, 1];
@@ -47,6 +51,12 @@ impl ScalePattern {
     #[inline]
     pub const fn pattern(&self) -> u16 {
         self.bits() & SCALE_PATTERN_MASK
+    }
+
+    #[inline]
+    pub const fn is_major(&self) -> bool {
+        let bits = self.bits() & SCALE_PATTERN_MAJOR_MASK;
+        bits == SCALE_PATTERN_MAJOR_WHOLE_WHOLE || bits == SCALE_PATTERN_MAJOR_HALF_WHOLE_AND_HALF
     }
 
     #[inline]
@@ -112,7 +122,8 @@ mod tests {
     }
 
     #[test]
-    fn test_major_scale_is_not_minor() {
+    fn test_major_scale_quality() {
+        assert!(MAJOR_SCALE.is_major());
         assert!(!MAJOR_SCALE.is_minor());
     }
 
@@ -129,7 +140,8 @@ mod tests {
     }
 
     #[test]
-    fn test_minor_scale_is_minor() {
+    fn test_minor_scale_quality() {
+        assert!(!NATURAL_MINOR_SCALE.is_major());
         assert!(NATURAL_MINOR_SCALE.is_minor());
     }
 
@@ -146,7 +158,8 @@ mod tests {
     }
 
     #[test]
-    fn test_harmonic_scale_is_minor() {
+    fn test_harmonic_scale_quality() {
+        assert!(!HARMONIC_MINOR_SCALE.is_major());
         assert!(HARMONIC_MINOR_SCALE.is_minor());
     }
 
@@ -163,7 +176,8 @@ mod tests {
     }
 
     #[test]
-    fn test_melodic_scale_is_minor() {
+    fn test_melodic_scale_quality() {
+        assert!(!MELODIC_MINOR_SCALE.is_major());
         assert!(MELODIC_MINOR_SCALE.is_minor());
     }
 }
