@@ -2,6 +2,7 @@
 //!
 //! This crate provides standard functionality for JSB applications.
 
+pub mod degreeplus;
 pub mod prelude;
 pub mod scale_pattern;
 
