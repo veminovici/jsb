@@ -22,6 +22,9 @@ bitflags! {
 }
 
 const SCALE_PATTERN_MASK: u16 = 0b0000_1111_1111_1111;
+const SCALE_PATTERN_MINOR_MASK: u16 = 0b0000_0000_000_0111;
+const SCALE_PATTERN_MINOR_WHOLE_HALF: u16 = 0b0110;
+const SCALE_PATTERN_MINOR_HALF_WHOLE: u16 = 0b0101;
 
 pub const MAJOR_SCALE: ScalePattern = ScalePattern::MAJOR;
 pub const MAJOR_SCALE_INTERVALS: [i8; 7] = [2, 4, 5, 7, 9, 11, 12];
@@ -44,6 +47,12 @@ impl ScalePattern {
     #[inline]
     pub const fn pattern(&self) -> u16 {
         self.bits() & SCALE_PATTERN_MASK
+    }
+
+    #[inline]
+    pub const fn is_minor(&self) -> bool {
+        let bits = self.bits() & SCALE_PATTERN_MINOR_MASK;
+        bits == SCALE_PATTERN_MINOR_WHOLE_HALF || bits == SCALE_PATTERN_MINOR_HALF_WHOLE
     }
 }
 
@@ -103,6 +112,11 @@ mod tests {
     }
 
     #[test]
+    fn test_major_scale_is_not_minor() {
+        assert!(!MAJOR_SCALE.is_minor());
+    }
+
+    #[test]
     fn test_minor_scale_intervals() {
         let intervals = get_intervals(&NATURAL_MINOR_SCALE).collect::<Vec<_>>();
         assert_eq!(intervals, NATURAL_MINOR_SCALE_INTERVALS);
@@ -112,6 +126,11 @@ mod tests {
     fn test_minor_scale_steps() {
         let steps = get_steps(&NATURAL_MINOR_SCALE).collect::<Vec<_>>();
         assert_eq!(steps, NATURAL_MINOR_SCALE_STEPS);
+    }
+
+    #[test]
+    fn test_minor_scale_is_minor() {
+        assert!(NATURAL_MINOR_SCALE.is_minor());
     }
 
     #[test]
@@ -127,6 +146,11 @@ mod tests {
     }
 
     #[test]
+    fn test_harmonic_scale_is_minor() {
+        assert!(HARMONIC_MINOR_SCALE.is_minor());
+    }
+
+    #[test]
     fn test_melodic_scale_intervals() {
         let intervals = get_intervals(&MELODIC_MINOR_SCALE).collect::<Vec<_>>();
         assert_eq!(intervals, MELODIC_MINOR_SCALE_INTERVALS);
@@ -136,5 +160,10 @@ mod tests {
     fn test_melodic_scale_steps() {
         let steps = get_steps(&MELODIC_MINOR_SCALE).collect::<Vec<_>>();
         assert_eq!(steps, MELODIC_MINOR_SCALE_STEPS);
+    }
+
+    #[test]
+    fn test_melodic_scale_is_minor() {
+        assert!(MELODIC_MINOR_SCALE.is_minor());
     }
 }
