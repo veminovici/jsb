@@ -60,7 +60,7 @@ impl ScalePattern {
 
     /// Get the intervals of the scale.
     #[inline]
-    pub fn intervals(&self) -> impl Iterator<Item = i8> {
+    pub fn intervals(&self) -> impl Iterator<Item = u8> {
         const SCALE_PATTERN_MASKS: [u16; 12] = [
             0b0000_0000_0000_0001,
             0b0000_0000_0000_0010,
@@ -83,7 +83,7 @@ impl ScalePattern {
             .enumerate()
             .filter_map(move |(index, mask)| {
                 if pattern & mask != 0 {
-                    Some((index + 1) as i8)
+                    Some((index + 1) as u8)
                 } else {
                     None
                 }
@@ -92,13 +92,20 @@ impl ScalePattern {
 
     /// Get the steps of the scale.
     #[inline]
-    pub fn steps(&self) -> impl Iterator<Item = i8> {
+    pub fn steps(&self) -> impl Iterator<Item = u8> {
         let mut last = 0;
         self.intervals().map(move |interval| {
             let step = interval - last;
             last = interval;
             step
         })
+    }
+
+    #[inline]
+    pub fn degree(&self, degree: usize) -> u8 {
+        self.intervals()
+            .nth(degree - 1)
+            .expect("The degree {degree} must be within the bounds of the scale")
     }
 }
 
@@ -108,8 +115,8 @@ mod tests {
 
     #[test]
     fn test_major_scale() {
-        const MAJOR_SCALE_INTERVALS: [i8; 7] = [2, 4, 5, 7, 9, 11, 12];
-        const MAJOR_SCALE_STEPS: [i8; 7] = [2, 2, 1, 2, 2, 2, 1];
+        const MAJOR_SCALE_INTERVALS: [u8; 7] = [2, 4, 5, 7, 9, 11, 12];
+        const MAJOR_SCALE_STEPS: [u8; 7] = [2, 2, 1, 2, 2, 2, 1];
 
         assert_eq!(MAJOR_SCALE.pattern(), 0b0000_1101_0101_1010);
 
@@ -121,12 +128,18 @@ mod tests {
 
         assert!(MAJOR_SCALE.is_major());
         assert!(!MAJOR_SCALE.is_minor());
+
+        let d3 = MAJOR_SCALE.degree(3);
+        assert_eq!(d3, 5);
+
+        let d5 = MAJOR_SCALE.degree(5);
+        assert_eq!(d5, 9);
     }
 
     #[test]
     fn test_minor_scale() {
-        const NATURAL_MINOR_SCALE_INTERVALS: [i8; 7] = [2, 3, 5, 7, 8, 10, 12];
-        const NATURAL_MINOR_SCALE_STEPS: [i8; 7] = [2, 1, 2, 2, 1, 2, 2];
+        const NATURAL_MINOR_SCALE_INTERVALS: [u8; 7] = [2, 3, 5, 7, 8, 10, 12];
+        const NATURAL_MINOR_SCALE_STEPS: [u8; 7] = [2, 1, 2, 2, 1, 2, 2];
 
         assert_eq!(NATURAL_MINOR_SCALE.pattern(), 0b0000_1010_1101_0110);
 
@@ -138,12 +151,18 @@ mod tests {
 
         assert!(!NATURAL_MINOR_SCALE.is_major());
         assert!(NATURAL_MINOR_SCALE.is_minor());
+
+        let d3 = NATURAL_MINOR_SCALE.degree(3);
+        assert_eq!(d3, 5);
+
+        let d5 = NATURAL_MINOR_SCALE.degree(5);
+        assert_eq!(d5, 8);
     }
 
     #[test]
     fn test_harmonic_scale() {
-        const HARMONIC_MINOR_SCALE_INTERVALS: [i8; 7] = [2, 3, 5, 7, 8, 11, 12];
-        const HARMONIC_MINOR_SCALE_STEPS: [i8; 7] = [2, 1, 2, 2, 1, 3, 1];
+        const HARMONIC_MINOR_SCALE_INTERVALS: [u8; 7] = [2, 3, 5, 7, 8, 11, 12];
+        const HARMONIC_MINOR_SCALE_STEPS: [u8; 7] = [2, 1, 2, 2, 1, 3, 1];
 
         assert_eq!(HARMONIC_MINOR_SCALE.pattern(), 0b0000_1100_1101_0110);
 
@@ -155,12 +174,18 @@ mod tests {
 
         assert!(!HARMONIC_MINOR_SCALE.is_major());
         assert!(HARMONIC_MINOR_SCALE.is_minor());
+
+        let d3 = HARMONIC_MINOR_SCALE.degree(3);
+        assert_eq!(d3, 5);
+
+        let d5 = HARMONIC_MINOR_SCALE.degree(5);
+        assert_eq!(d5, 8);
     }
 
     #[test]
     fn test_melodic_scale() {
-        const MELODIC_MINOR_SCALE_INTERVALS: [i8; 7] = [2, 3, 5, 7, 9, 11, 12];
-        const MELODIC_MINOR_SCALE_STEPS: [i8; 7] = [2, 1, 2, 2, 2, 2, 1];
+        const MELODIC_MINOR_SCALE_INTERVALS: [u8; 7] = [2, 3, 5, 7, 9, 11, 12];
+        const MELODIC_MINOR_SCALE_STEPS: [u8; 7] = [2, 1, 2, 2, 2, 2, 1];
 
         assert_eq!(MELODIC_MINOR_SCALE.pattern(), 0b0000_1101_0101_0110);
 
@@ -172,5 +197,11 @@ mod tests {
 
         assert!(!MELODIC_MINOR_SCALE.is_major());
         assert!(MELODIC_MINOR_SCALE.is_minor());
+
+        let d3 = MELODIC_MINOR_SCALE.degree(3);
+        assert_eq!(d3, 5);
+
+        let d5 = MELODIC_MINOR_SCALE.degree(5);
+        assert_eq!(d5, 9);
     }
 }
