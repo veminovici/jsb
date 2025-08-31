@@ -23,22 +23,6 @@ bitflags! {
 
 const SCALE_PATTERN_MASK: u16 = 0b0000_1111_1111_1111;
 
-#[cfg(test)]
-const SCALE_PATTERN_MASKS: [u16; 12] = [
-    0b0000_0000_0000_0001,
-    0b0000_0000_0000_0010,
-    0b0000_0000_0000_0100,
-    0b0000_0000_0000_1000,
-    0b0000_0000_0001_0000,
-    0b0000_0000_0010_0000,
-    0b0000_0000_0100_0000,
-    0b0000_0000_1000_0000,
-    0b0000_0001_0000_0000,
-    0b0000_0010_0000_0000,
-    0b0000_0100_0000_0000,
-    0b0000_1000_0000_0000,
-];
-
 pub const MAJOR_SCALE: ScalePattern = ScalePattern::MAJOR;
 pub const MAJOR_SCALE_INTERVALS: [i8; 7] = [2, 4, 5, 7, 9, 11, 12];
 pub const MAJOR_SCALE_STEPS: [i8; 7] = [2, 2, 1, 2, 2, 2, 1];
@@ -66,6 +50,21 @@ impl ScalePattern {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    const SCALE_PATTERN_MASKS: [u16; 12] = [
+        0b0000_0000_0000_0001,
+        0b0000_0000_0000_0010,
+        0b0000_0000_0000_0100,
+        0b0000_0000_0000_1000,
+        0b0000_0000_0001_0000,
+        0b0000_0000_0010_0000,
+        0b0000_0000_0100_0000,
+        0b0000_0000_1000_0000,
+        0b0000_0001_0000_0000,
+        0b0000_0010_0000_0000,
+        0b0000_0100_0000_0000,
+        0b0000_1000_0000_0000,
+    ];
 
     fn get_intervals(pattern: &ScalePattern) -> impl Iterator<Item = i8> {
         let pattern = pattern.pattern();
