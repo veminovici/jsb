@@ -21,21 +21,6 @@ pub const HARMONIC_MINOR_SCALE: ScalePattern = ScalePattern::from_u16(0b0000_110
 /// Pattern: W-H-W-W-W-W-H (Whole-Half-Whole-Whole-Whole-Whole-Half)
 pub const MELODIC_MINOR_SCALE: ScalePattern = ScalePattern::from_u16(0b0000_1101_0101_0110);
 
-const SCALE_PATTERN_MASKS: [u16; 12] = [
-    0b0000_0000_0000_0001,
-    0b0000_0000_0000_0010,
-    0b0000_0000_0000_0100,
-    0b0000_0000_0000_1000,
-    0b0000_0000_0001_0000,
-    0b0000_0000_0010_0000,
-    0b0000_0000_0100_0000,
-    0b0000_0000_1000_0000,
-    0b0000_0001_0000_0000,
-    0b0000_0010_0000_0000,
-    0b0000_0100_0000_0000,
-    0b0000_1000_0000_0000,
-];
-
 impl ScalePattern {
     /// Create a scale pattern from a 16-bit integer.
     #[inline]
@@ -76,6 +61,21 @@ impl ScalePattern {
     /// Get the intervals of the scale.
     #[inline]
     pub fn intervals(&self) -> impl Iterator<Item = i8> {
+        const SCALE_PATTERN_MASKS: [u16; 12] = [
+            0b0000_0000_0000_0001,
+            0b0000_0000_0000_0010,
+            0b0000_0000_0000_0100,
+            0b0000_0000_0000_1000,
+            0b0000_0000_0001_0000,
+            0b0000_0000_0010_0000,
+            0b0000_0000_0100_0000,
+            0b0000_0000_1000_0000,
+            0b0000_0001_0000_0000,
+            0b0000_0010_0000_0000,
+            0b0000_0100_0000_0000,
+            0b0000_1000_0000_0000,
+        ];
+
         let pattern = self.pattern();
 
         SCALE_PATTERN_MASKS
