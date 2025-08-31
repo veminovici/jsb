@@ -1,0 +1,15 @@
+[workspace]
+members = [
+    "jsb-std"
+]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Name <your.email@example.com>"]
+description = "JSB Standard Library"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/yourusername/jsb"
+keywords = ["jsb", "standard-library"]
+categories = ["standard-library"]
