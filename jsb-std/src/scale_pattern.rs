@@ -30,18 +30,26 @@ const SCALE_PATTERN_MAJOR_MASK: u16 = 0b0000_0000_0000_1111;
 const SCALE_PATTERN_MAJOR_WHOLE_WHOLE: u16 = 0b1010;
 const SCALE_PATTERN_MAJOR_HALF_WHOLE_AND_HALF: u16 = 0b1001;
 
+/// The major scale (Ionian mode).
+/// Pattern: W-W-H-W-W-W-H (Whole-Whole-Half-Whole-Whole-Whole-Half)
 pub const MAJOR_SCALE: ScalePattern = ScalePattern::MAJOR;
 pub const MAJOR_SCALE_INTERVALS: [i8; 7] = [2, 4, 5, 7, 9, 11, 12];
 pub const MAJOR_SCALE_STEPS: [i8; 7] = [2, 2, 1, 2, 2, 2, 1];
 
+/// The natural minor scale (Aeolian mode)
+/// Pattern: W-H-W-W-H-W-W (Whole-Half-Whole-Whole-Half-Whole-Whole)
 pub const NATURAL_MINOR_SCALE: ScalePattern = ScalePattern::NATURAL_MINOR;
 pub const NATURAL_MINOR_SCALE_INTERVALS: [i8; 7] = [2, 3, 5, 7, 8, 10, 12];
 pub const NATURAL_MINOR_SCALE_STEPS: [i8; 7] = [2, 1, 2, 2, 1, 2, 2];
 
+/// The harmonic minor scale
+/// Pattern: W-H-W-W-H-WH-H (WH = Whole and a Half)
 pub const HARMONIC_MINOR_SCALE: ScalePattern = ScalePattern::HARMONIC_MINOR;
 pub const HARMONIC_MINOR_SCALE_INTERVALS: [i8; 7] = [2, 3, 5, 7, 8, 11, 12];
 pub const HARMONIC_MINOR_SCALE_STEPS: [i8; 7] = [2, 1, 2, 2, 1, 3, 1];
 
+/// The melodic minor scale (ascending)
+/// Pattern: W-H-W-W-W-W-H (Whole-Half-Whole-Whole-Whole-Whole-Half)
 pub const MELODIC_MINOR_SCALE: ScalePattern = ScalePattern::MELODIC_MINOR;
 pub const MELODIC_MINOR_SCALE_INTERVALS: [i8; 7] = [2, 3, 5, 7, 9, 11, 12];
 pub const MELODIC_MINOR_SCALE_STEPS: [i8; 7] = [2, 1, 2, 2, 2, 2, 1];
