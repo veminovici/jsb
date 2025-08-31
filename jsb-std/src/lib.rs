@@ -1,5 +1,5 @@
 //! JSB Standard Library
-//! 
+//!
 //! This crate provides standard functionality for JSB applications.
 
 pub mod prelude;
